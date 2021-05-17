@@ -1,0 +1,12 @@
+GET http://localhost:8089/test
+Accept: aaplication/json
+
+###
+
+
+POST http://localhost:8089/test/post
+Content-Type: application/x-www-form-urlencoded
+
+name=TEST
+
+###还不能够在参数和=之间加空格，坑
