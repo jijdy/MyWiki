@@ -9,7 +9,6 @@ client.test("test_Hello",function() {
   client.assert(response.status === 200, "返回码不是200");
   client.assert(response.body === "Hello World!","结果验证失败");
 });
-
 %}
 
 ###
