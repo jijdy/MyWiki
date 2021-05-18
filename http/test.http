@@ -20,3 +20,5 @@ Content-Type: application/x-www-form-urlencoded
 name=TEST
 
 ###还不能够在参数和=之间加空格，坑
+
+GET http://localhost:8089/test/list
