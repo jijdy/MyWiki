@@ -1,7 +1,8 @@
 package com.example.mywiki.controller;
 
-import com.example.mywiki.domain.Ebook;
+import com.example.mywiki.req.EbookReq;
 import com.example.mywiki.resp.CommonResp;
+import com.example.mywiki.resp.EbookResp;
 import com.example.mywiki.service.EbookService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +35,9 @@ public class EbookController {
     }
 
     @RequestMapping  ("/list")
-    public CommonResp list(String name) {
-        CommonResp<List<Ebook>> resp = new CommonResp<>();
-        List<Ebook> list = ebookService.list(name); //调用服务层，通过服务层调用Mapper层数据库数据
+    public CommonResp list(EbookReq req) {
+        CommonResp<List<EbookResp>> resp = new CommonResp<>();
+        List<EbookResp> list = ebookService.list(req); //调用服务层，通过服务层调用Mapper层数据库数据
         resp.setContent(list);
         return resp;
     }

@@ -2,4 +2,4 @@ GET http://localhost:8089/ebook
 #Accept: aaplication/json
 
 ###
-GET http://localhost:8089/ebook/list?name=Boot
+GET http://localhost:8089/ebook/list?name=vue
