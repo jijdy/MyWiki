@@ -41,8 +41,8 @@
                              targetPackage="com.example.mywiki.mapper"
                              type="XMLMAPPER"/>
 
-        <table tableName="demo" domainObjectName="Demo"/>
-        <!--<table tableName="ebook"/>-->
+        <!--  <table tableName="demo" domainObjectName="Demo"/>-->
+        <table tableName="ebook" domainObjectName="Ebook"/>
         <!--<table tableName="category"/>-->
         <!--<table tableName="doc"/>-->
         <!--<table tableName="content"/>-->
