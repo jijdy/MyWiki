@@ -1,8 +1,8 @@
 package com.example.mywiki.service;
 
-import com.example.mywiki.domain.Demo;
-import com.example.mywiki.domain.DemoExample;
-import com.example.mywiki.mapper.DemoMapper;
+import com.example.mywiki.domain.Ebook;
+import com.example.mywiki.domain.EbookExample;
+import com.example.mywiki.mapper.EbookMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,10 +12,10 @@ import java.util.List;
 public class EbookService {
 
     @Resource
-    private DemoMapper demoMapper;
+    private EbookMapper ebookMapper;
 
-    public List<Demo> list() {
+    public List<Ebook> list() {
 
-        return demoMapper.selectByExample(new DemoExample());
+        return ebookMapper.selectByExample(new EbookExample());
     }
 }
