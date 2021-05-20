@@ -34,9 +34,9 @@ public class EbookController {
     }
 
     @RequestMapping  ("/list")
-    public CommonResp list() {
+    public CommonResp list(String name) {
         CommonResp<List<Ebook>> resp = new CommonResp<>();
-        List<Ebook> list = ebookService.list();
+        List<Ebook> list = ebookService.list(name); //调用服务层，通过服务层调用Mapper层数据库数据
         resp.setContent(list);
         return resp;
     }
