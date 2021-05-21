@@ -48,23 +48,46 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      Content
+      <pre>
+{{ebooks}}
+{{books}}
+      </pre>
+
     </a-layout-content>
   </a-layout>
 
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'; // @ is an alias to /src
+import { defineComponent, onMounted,ref,reactive,toRef} from 'vue'; // @ is an alias to /src
 import axios from "axios"
 export default defineComponent({
   name: 'Home',
   setup() {
     console.log("setup");
-    axios.get("http://localhost:8089/ebook/list?name=vue").then((response => {
-      console.log(response);
-    }))
+    const ebooks = ref();
+    const ebooks1 = reactive({bookS: []});
+    onMounted(() => {
+      console.log("onMounted")
+      axios.get("http://localhost:8089/ebook/list?name=vue").then(
+          (response =>
+          {
+            const data = response.data;
+            ebooks.value = data.content;
+            ebooks1.bookS = data.content;
+            console.log(response);
+          })
+      );
+    });
+    return {
+      ebooks,
+      books: toRef(ebooks1,"bookS")
+    }
   }
-
 });
+//onMounted ,生命周期函数。
+//①ref(),表示将数据更改为响应式的数据，可以在后端将数据改变之后直接显示在前端页面。。。response响应
+//②reactive(),用法同上，但是在数值传递时进行toRef()转换，键数据转换为响应式的数据。。responseText响应
+// return在js中还要加大括号
+
 </script>
