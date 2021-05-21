@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer style="text-align: center">
+  <a-layout-footer style="text-align-last: center">
     jijdy‘s Wiki
   </a-layout-footer>
 </template>
