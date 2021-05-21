@@ -56,11 +56,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'; // @ is an alias to /src
-
+import axios from "axios"
 export default defineComponent({
   name: 'Home',
-  components: {
+  setup() {
+    console.log("setup");
+    axios.get("http://localhost:8089/ebook/list?name=vue").then((response => {
+      console.log(response);
+    }))
+  }
 
-  },
 });
 </script>
