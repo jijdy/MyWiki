@@ -11,7 +11,8 @@ import org.springframework.core.env.Environment;
 @ComponentScan("com.example.mywiki")
 @SpringBootApplication
 @MapperScan("com.example.mywiki.mapper")
-public class MyWikiApplication {
+public class
+MyWikiApplication {
 
     private static final Logger LOG =  LoggerFactory.getLogger(MyWikiApplication.class);
 
