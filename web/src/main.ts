@@ -8,6 +8,21 @@ import  * as Icons from '@ant-design/icons-vue'
 import axios from "axios";
 axios.defaults.baseURL = process.env.VUE_APP_SERVER;
 
+//axios前端信息拦截器，用于打印前端信息日志全局使用
+axios.interceptors.request.use(function (config) {
+    console.log('请求参数：', config);
+    return config;
+},error => {
+    return Promise.reject(error);
+});
+axios.interceptors.response.use(function (response) {
+    console.log('返回结果：',response);
+    return response;
+},error => {
+    return Promise.reject(error);
+});
+//Promise.reject 逻辑就不会向后走，也就不会进入到业务代码中
+
 const app = createApp(App);
 app.use(store).use(router).use(Antd).mount('#app')
 
