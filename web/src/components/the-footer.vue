@@ -1,5 +1,9 @@
 <template>
-  <a-layout-footer style="text-align-last: center">
+  <a-layout-footer style="text-align:  center ;
+   padding: 6px 12px;
+    color: rgba(23, 24, 435, 255);
+    font-size: 15px;
+    background: #f0f2f5;">
     jijdy‘s Wiki
   </a-layout-footer>
 </template>
@@ -11,3 +15,4 @@ export default defineComponent({
   name: 'the-footer',
 });
 </script>
+
