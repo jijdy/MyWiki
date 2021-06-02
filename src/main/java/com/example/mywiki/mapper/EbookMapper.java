@@ -2,9 +2,8 @@ package com.example.mywiki.mapper;
 
 import com.example.mywiki.domain.Ebook;
 import com.example.mywiki.domain.EbookExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface EbookMapper {
     long countByExample(EbookExample example);
@@ -17,7 +16,7 @@ public interface EbookMapper {
 
     int insertSelective(Ebook record);
 
-    List<Ebook>selectByExample (EbookExample example);
+    List<Ebook> selectByExample(EbookExample example);
 
     Ebook selectByPrimaryKey(Long id);
 
