@@ -59,11 +59,11 @@
         </dependency>
 
         <!--    加入PageHelper插件实现分页功能-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.pagehelper</groupId>-->
-<!--            <artifactId>pagehelper-spring-boot-sample-xml</artifactId>-->
-<!--            <version>1.2.13</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.13</version>
+        </dependency>
 
     </dependencies>
 

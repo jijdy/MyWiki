@@ -6,6 +6,10 @@ import com.example.mywiki.mapper.EbookMapper;
 import com.example.mywiki.req.EbookReq;
 import com.example.mywiki.resp.EbookResp;
 import com.example.mywiki.util.CopyUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -15,17 +19,25 @@ import java.util.List;
 @Service
 public class EbookService {
 
+    private static final Logger Log = LoggerFactory.getLogger(EbookService.class);
+
     @Resource
     private EbookMapper ebookMapper;
 
     public List<EbookResp> list(EbookReq req) {
-//        PageHelper.startPage(1,2,true);
+
         EbookExample ebookExample = new EbookExample();
         if (!ObjectUtils.isEmpty(req.getName())) {
             EbookExample.Criteria criteria = ebookExample.createCriteria();
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        List<Ebook> ebooks = ebookMapper.selectByExample(ebookExample);
+        PageHelper.startPage(1,3);
+        List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
+
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        Log.info("总行数：{}",pageInfo.getTotal());
+        Log.info("总页数：{}",pageInfo.getPages());
+
 
 //        List<EbookResp> respList = new ArrayList<>();
 //        for (Ebook ebook : ebooks) {
@@ -34,6 +46,6 @@ public class EbookService {
 //            respList.add(resp);;
 //        }
 
-        return CopyUtil.copyList(ebooks, EbookResp.class);
+        return CopyUtil.copyList(ebookList, EbookResp.class);
     }
 }
