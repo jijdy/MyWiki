@@ -1,9 +1,14 @@
 <template>
-  <div class="about">
-    <h1>电子书管理界面</h1>
-  </div>
-</template>
+  <a-layout>
+    <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '440px' }">
 
+        <div class="about">
+          <h1>电子书管理界面</h1>
+        </div>
+
+    </a-layout-content>
+  </a-layout>
+</template>
 <script>
 export default {
   name: "admin-ebook"
