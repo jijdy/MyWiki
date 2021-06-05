@@ -74,12 +74,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted,ref,reactive,toRef} from 'vue'; // @ is an alias to /src
+import { defineComponent, onMounted,ref} from 'vue'; // @ is an alias to /src
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import axios from "axios"
 
-const listData: Record<string, string>[] = [];
-
+// const listData: Record<string, string>[] = [];
 // for (let i = 0; i < 23; i++) {
 //   listData.push({
 //     href: 'https://www.antdv.com/',
@@ -100,7 +99,7 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const ebooks = ref();
-    const ebooks1 = reactive({bookS: []});
+    // const ebooks1 = reactive({bookS: []});
     onMounted(() => {
       axios.get("/ebook/list", {
             params: {
