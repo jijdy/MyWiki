@@ -102,12 +102,18 @@ export default defineComponent({
     const ebooks = ref();
     const ebooks1 = reactive({bookS: []});
     onMounted(() => {
-      axios.get("/ebook/list").then(
+      axios.get("/ebook/list", {
+            params: {
+              page: 1,
+              size: 1000,
+            }
+          }
+      ).then(
           (response =>
           {
             const data = response.data;
-            ebooks.value = data.content;
-            ebooks1.bookS = data.content;
+            ebooks.value = data.content.list;
+            // ebooks1.bookS = data.content;
           })
       );
     });
@@ -123,11 +129,11 @@ export default defineComponent({
       { type: 'MessageOutlined', text: '2' },
     ];
     return {
-      listData,
+      // listData,
       pagination,
       actions,
       ebooks,                           //没有用到的测试数据
-      books: toRef(ebooks1,"bookS"),//同上
+      // books: toRef(ebooks1,"bookS"),//同上
     };
   }
 });
