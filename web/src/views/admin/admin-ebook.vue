@@ -109,7 +109,7 @@ export default defineComponent({
     }
   ];
     /*
-    进行数据查询,从后端调用数据库信息，一次拿出所有的数据，在前端进行分页
+    进行#数据查询#,从后端调用数据库信息，一次拿出所有的数据，在前端进行分页
     通过get传参数到后端，改变参数params中的数据属性,只传递分页需要的属性
     * */
     const handleQuery = (params: any) => {
@@ -142,16 +142,28 @@ export default defineComponent({
       });
     };
 
-    //表单
+    //编辑表单
     const ebook = ref({});
     const moduleVisible = ref(false);
     const moduleLoading = ref(false);
     const handleModalOk = () => {
       moduleLoading.value = true;
-      setTimeout(() => {
-        moduleVisible.value = false;
-        moduleLoading.value = false;
-      }, 1000);
+      //使用post新增或修改后端的数据
+      axios.post("/ebook/save", ebook.value).then((response) => {
+        const data = response.data;  //对应的是后端返回给前端的数据commonResp
+
+        if (data.success) {
+          //关闭编辑弹出的页面
+          moduleVisible.value = false;
+          moduleLoading.value = false;
+
+          //再重新加载已经更新到后端的数据到达前端页面
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize,
+          });
+        }
+      });
     };
 
     //编辑逻辑
@@ -165,7 +177,7 @@ export default defineComponent({
     onMounted(() => {
       handleQuery({
         page: 1,
-        size: pagination.value.pageSize
+        size: pagination.value.pageSize,
       });
     });
 

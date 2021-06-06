@@ -1,6 +1,6 @@
-package com.example.mywiki.resp;
+package com.example.mywiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;

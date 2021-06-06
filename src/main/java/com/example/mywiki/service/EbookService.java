@@ -3,8 +3,9 @@ package com.example.mywiki.service;
 import com.example.mywiki.domain.Ebook;
 import com.example.mywiki.domain.EbookExample;
 import com.example.mywiki.mapper.EbookMapper;
-import com.example.mywiki.req.EbookReq;
-import com.example.mywiki.resp.EbookResp;
+import com.example.mywiki.req.EbookQueryReq;
+import com.example.mywiki.req.EbookSaveReq;
+import com.example.mywiki.resp.EbookQueryResp;
 import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -25,7 +26,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
         EbookExample ebookExample = new EbookExample();
         if (!ObjectUtils.isEmpty(req.getName())) {
@@ -47,11 +48,22 @@ public class EbookService {
 //            respList.add(resp);;
 //        }
 
-        List<EbookResp> list = CopyUtil.copyList(ebookList,EbookResp.class);
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
+    }
+
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req,Ebook.class);
+        if(ObjectUtils.isEmpty(req.getId())) {
+            //若id为空，则数据库中无数据，则插入数据
+            ebookMapper.insert(ebook);
+        } else {
+            //否则更新数据即可
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }
