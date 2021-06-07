@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController //用于返回字符串
 //@Controller    //用于返回页面,前后端分离中一般用不到
@@ -34,7 +35,7 @@ public class EbookController {
     }
 
     @RequestMapping  ("/list")
-    public CommonResp list(EbookQueryReq req) {
+    public CommonResp list(@Valid EbookQueryReq req) {
         CommonResp<PageResp<EbookQueryResp>> resp = new CommonResp<>();
         PageResp<EbookQueryResp> list = ebookService.list(req); //调用服务层，通过服务层调用Mapper层数据库数据
         resp.setContent(list);

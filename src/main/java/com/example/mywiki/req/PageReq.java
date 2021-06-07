@@ -1,8 +1,15 @@
 package com.example.mywiki.req;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+
 public class PageReq<E> {
+
+    @NotNull(message = "页码不能为空！")
     private int page;
 
+    @NotNull(message = "列表不能为空！")
+    @Max(value = 1000,message = "最大查询数据过大！")
     private int size;
 
     public int getPage() {
