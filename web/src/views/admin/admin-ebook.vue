@@ -2,8 +2,12 @@
   <a-layout>
     <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '440px' }">
 
+      <p>
+        <a-button type="primary" @click="add()" size="large">
+          新增
+        </a-button>
+      </p>
       <a-table
-
           :columns="columns"
           :row-key="record => record.id"
           :data-source="ebooks"
@@ -146,6 +150,7 @@ export default defineComponent({
     const ebook = ref({});
     const moduleVisible = ref(false);
     const moduleLoading = ref(false);
+    //ok键按下时触发，也即是提交表单之后的函数
     const handleModalOk = () => {
       moduleLoading.value = true;
       //使用post新增或修改后端的数据
@@ -172,6 +177,12 @@ export default defineComponent({
       ebook.value = record; //将编辑页的内容返回到ebook的值中
     };
 
+    //新增函数
+    const add = () => {
+      moduleVisible.value = true;
+      ebook.value={};
+    };
+
 
     //初始加载时触发
     onMounted(() => {
@@ -182,13 +193,19 @@ export default defineComponent({
     });
 
     return{
+      //查询主页面的返回值
       ebooks,
       pagination,
       columns,
       loading,
       handleTableChange,
+
+      //功能函数的返回值
       edit,
-      ebook,
+      add,
+
+      //编辑页面的返回值
+      ebook ,
       moduleVisible,
       moduleLoading,
       handleModalOk,

@@ -8,10 +8,12 @@ import com.example.mywiki.req.EbookSaveReq;
 import com.example.mywiki.resp.EbookQueryResp;
 import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.util.CopyUtil;
+import com.example.mywiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -25,6 +27,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Autowired
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
 
@@ -57,9 +62,15 @@ public class EbookService {
     }
 
     public void save(EbookSaveReq req) {
+        Log.info(req.toString());
         Ebook ebook = CopyUtil.copy(req,Ebook.class);
         if(ObjectUtils.isEmpty(req.getId())) {
             //若id为空，则数据库中无数据，则插入数据
+            //使用了雪花算法，根据时间戳来对更新的id进行计算得到一个long类型的数据
+            ebook.setId(snowFlake.nextId());
+            ebook.setDocCount(0);
+            ebook.setViewCount(0);
+            ebook.setVoteCount(0);
             ebookMapper.insert(ebook);
         } else {
             //否则更新数据即可
