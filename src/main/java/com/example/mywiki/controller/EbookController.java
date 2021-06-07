@@ -44,7 +44,7 @@ public class EbookController {
 
      //sava中导入参数加上@RequestBody注解表示其可以接收来着前端的json数据格式的数据
     @PostMapping("/save")
-    public CommonResp sava(@RequestBody EbookSaveReq req) {
+    public CommonResp sava(@Valid @RequestBody EbookSaveReq req) {
         CommonResp resp = new CommonResp<>();
         ebookService.save(req);
         return resp;

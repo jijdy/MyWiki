@@ -1,8 +1,11 @@
 package com.example.mywiki.req;
 
+import javax.validation.constraints.NotNull;
+
 public class EbookSaveReq {
     private Long id;
 
+    @NotNull(message = "电子书名称不能为空！")
     private String name;
 
     private Long category1Id;

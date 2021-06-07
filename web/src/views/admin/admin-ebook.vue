@@ -184,18 +184,20 @@ export default defineComponent({
       moduleLoading.value = true;
       //使用post新增或修改后端的数据
       axios.post("/ebook/save", ebook.value).then((response) => {
+        moduleLoading.value = false;
         const data = response.data;  //对应的是后端返回给前端的数据commonResp
 
         if (data.success) {
           //关闭编辑弹出的页面
           moduleVisible.value = false;
-          moduleLoading.value = false;
 
           //再重新加载已经更新到后端的数据到达前端页面
           handleQuery({
             page: pagination.value.current,
             size: pagination.value.pageSize,
           });
+        } else {
+          message.error(data.message);
         }
       });
     };
