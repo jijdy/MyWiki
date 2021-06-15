@@ -3,9 +3,23 @@
     <a-layout-content :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '440px' }">
 
       <p>
-        <a-button type="primary" @click="add()" size="large">
-          新增
-        </a-button>
+        <a-form layout="inline" :model="param">
+          <a-form-item>
+            <a-input v-model:value="param.name" aria-placeholder="名称">
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+              搜索
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()" >
+              新增
+            </a-button>
+          </a-form-item>
+
+        </a-form>
       </p>
       <a-table
           :columns="columns"
@@ -77,6 +91,8 @@ import { message } from 'ant-design-vue';
 export default defineComponent({
   name:'AdminEbook',
   setup() {
+    const param = ref();
+    param.value = {};
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -131,6 +147,7 @@ export default defineComponent({
         params: {
           page: params.page,
           size: params.size,
+          name: param.value.name,
         }
 
       }).then((response) => {
@@ -224,23 +241,24 @@ export default defineComponent({
     });
 
     return{
-      //查询主页面的返回值
+
       ebooks,
       pagination,
       columns,
       loading,
       handleTableChange,
+      param,
 
-      //功能函数的返回值
       edit,
       add,
 
-      //编辑页面的返回值
+
       ebook ,
       moduleVisible,
       moduleLoading,
       handleModalOk,
       handleDelete,
+      handleQuery
     }
   }
 });
