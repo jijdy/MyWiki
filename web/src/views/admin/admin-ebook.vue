@@ -87,6 +87,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+import {Tool} from "@/utils/tool";
 
 export default defineComponent({
   name:'AdminEbook',
@@ -222,7 +223,7 @@ export default defineComponent({
     //编辑逻辑
     const edit = (record: any) => {
       moduleVisible.value = true;
-      ebook.value = record; //将编辑页的内容返回到ebook的值中
+      ebook.value = Tool.copy(record); //通过一个复制的json对象来使写入的值不会直接映射到页面上
     };
 
     //新增函数
