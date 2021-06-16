@@ -13,6 +13,9 @@
       <a-menu-item key="/admin">
         <router-link to="/admin">管理电子书</router-link>
       </a-menu-item>
+      <a-menu-item key="/category">
+        <router-link to="/category">分类管理</router-link>
+      </a-menu-item>
       <a-menu-item key="3">
         <router-link to="/About">关于作者</router-link>
       </a-menu-item>
