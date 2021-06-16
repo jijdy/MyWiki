@@ -46,19 +46,26 @@ public class CategoryService {
         Log.info("总页数：{}",pageInfo.getPages());
 
 
-//        List<CategoryResp> respList = new ArrayList<>();
-//        for (Category category : categorys) {
-//            CategoryResp resp = new CategoryResp();
-//            BeanUtils.copyProperties(category,resp);
-//            respList.add(resp);;
-//        }
-
         List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
 
         PageResp<CategoryQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
+    }
+
+    public List<CategoryQueryResp> all(CategoryQueryReq req) {
+
+        CategoryExample categoryExample = new CategoryExample();
+        if (!ObjectUtils.isEmpty(req.getName())) {
+            CategoryExample.Criteria criteria = categoryExample.createCriteria();
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+
+        List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+        return list;
     }
 
     public void save(CategorySaveReq req) {

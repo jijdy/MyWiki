@@ -9,7 +9,7 @@
             </a-input>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+            <a-button type="primary" @click="handleQuery()">
               搜索
             </a-button>
           </a-form-item>
@@ -25,9 +25,8 @@
           :columns="columns"
           :row-key="record => record.id"
           :data-source="categorys"
-          :pagination="pagination"
           :loading="loading"
-          @change="handleTableChange"
+          :pagination="false"
       >
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar" />
@@ -88,11 +87,6 @@ export default defineComponent({
     const param = ref();
     param.value = {};
     const categorys = ref();
-    const pagination = ref({
-      current: 1,
-      pageSize:8,
-      total: 0,
-    });
     const loading = ref(false);
 
     const columns = [
@@ -119,12 +113,10 @@ export default defineComponent({
     进行#数据查询#,从后端调用数据库信息，一次拿出所有的数据，在前端进行分页
     通过get传参数到后端，改变参数params中的数据属性,只传递分页需要的属性
     * */
-    const handleQuery = (params: any) => {
+    const handleQuery = () => {
       loading.value = true;
-      axios.get("/category/list", {
+      axios.get("/category/all", {
         params: {
-          page: params.page,
-          size: params.size,
           name: param.value.name,
         }
 
@@ -132,28 +124,15 @@ export default defineComponent({
         loading.value = false;
         const data = response.data;
         if (data.success) {
-          categorys.value = data.content.list;
+          categorys.value = data.content;
 
-          //  重置分页按钮，在点击换页之后将当前页码转换并转换显示内容
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
         } else {
-          message.error(data.message);
+          message.error(data.message);``
         }
 
       });
     };
 
-    /*
-    * 表格点击页码时出现
-    * */
-    const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数为：" + pagination);
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pagination,
-      });
-    };
 
 
     const handleDelete = (id: number) => {
@@ -161,10 +140,7 @@ export default defineComponent({
           const data = response.data;
           if (data.success) {
             //重新加载数据列表
-            handleQuery({
-              page: pagination.value.current,
-              size: pagination.value.pageSize,
-            });
+            handleQuery();
           }
         })
     };
@@ -186,10 +162,7 @@ export default defineComponent({
           moduleVisible.value = false;
 
           //再重新加载已经更新到后端的数据到达前端页面
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
+          handleQuery();
         } else {
           message.error(data.message);
         }
@@ -211,19 +184,14 @@ export default defineComponent({
 
     //初始加载时触发
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize,
-      });
+      handleQuery();
     });
 
     return{
 
       categorys,
-      pagination,
       columns,
       loading,
-      handleTableChange,
       param,
 
       edit,

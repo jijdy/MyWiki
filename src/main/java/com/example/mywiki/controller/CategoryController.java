@@ -2,15 +2,15 @@ package com.example.mywiki.controller;
 
 import com.example.mywiki.req.CategoryQueryReq;
 import com.example.mywiki.req.CategorySaveReq;
-import com.example.mywiki.resp.CommonResp;
 import com.example.mywiki.resp.CategoryQueryResp;
-import com.example.mywiki.resp.PageResp;
+import com.example.mywiki.resp.CommonResp;
 import com.example.mywiki.service.CategoryService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController //用于返回字符串
 //@Controller    //用于返回页面,前后端分离中一般用不到
@@ -34,10 +34,10 @@ public class CategoryController {
         return "Hello World!" + name;
     }
 
-    @RequestMapping  ("/list")
+    @RequestMapping  ("/all")
     public CommonResp list(@Valid CategoryQueryReq req) {
-        CommonResp<PageResp<CategoryQueryResp>> resp = new CommonResp<>();
-        PageResp<CategoryQueryResp> list = categoryService.list(req); //调用服务层，通过服务层调用Mapper层数据库数据
+        CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
+        List<CategoryQueryResp> list = categoryService.all(req);
         resp.setContent(list);
         return resp;
     }
