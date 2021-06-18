@@ -32,6 +32,9 @@
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar" />
         </template>
+        <template v-slot:category="{ text, record }">
+          <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
+        </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -68,11 +71,12 @@
       <a-form-item label="名称">
         <a-input v-model:value="ebook.name" />
       </a-form-item>
-      <a-form-item label="分类一">
-        <a-input v-model:value="ebook.category1Id" />
-      </a-form-item>
-      <a-form-item label="分类二">
-        <a-input v-model:value="ebook.category2Id" />
+      <a-form-item label="分类">
+        <a-cascader
+            v-model:value="categoryIds"
+            :field-names="{ label: 'name', value: 'id', children: 'children' }"
+            :options="takeLevel"
+        />
       </a-form-item>
       <a-form-item label="描述">
         <a-input v-model:value="ebook.desc" type="textarea" />
@@ -111,13 +115,8 @@ export default defineComponent({
       dataIndex: 'name',
     },
     {
-      title: '分类一',
-      key: 'category1Id',
-      dataIndex: 'category1Id',
-    },
-    {
-      title: '分类二',
-      dataIndex: 'catagory2Id',
+      title: '分类',
+      slots: { customRender: 'category' }
     },
     {
       title: '文档数',
@@ -192,12 +191,18 @@ export default defineComponent({
     };
 
     //编辑表单
-    const ebook = ref({});
+    /**
+     * 数组，[100, 101]对应：前端开发 / Vue
+     */
+    const categoryIds = ref();
+    const ebook = ref();
     const moduleVisible = ref(false);
     const moduleLoading = ref(false);
     //ok键按下时触发，也即是提交表单之后的函数
     const handleModalOk = () => {
       moduleLoading.value = true;
+      ebook.value.category1Id = categoryIds.value[0];
+      ebook.value.category2Id = categoryIds.value[1]
       //使用post新增或修改后端的数据
       axios.post("/ebook/save", ebook.value).then((response) => {
         moduleLoading.value = false;
@@ -222,6 +227,7 @@ export default defineComponent({
     const edit = (record: any) => {
       moduleVisible.value = true;
       ebook.value = Tool.copy(record); //通过一个复制的json对象来使写入的值不会直接映射到页面上
+      categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id]
     };
 
     //新增函数
@@ -230,9 +236,44 @@ export default defineComponent({
       ebook.value={};
     };
 
+    const takeLevel = ref();
+    let categorys: any;
+    /**
+     * 查询所有分类
+     **/
+    const handleQueryCategory = () => {
+      loading.value = true;
+      axios.get("/category/all").then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if (data.success) {
+          categorys = data.content;
+          // console.log("原始数组：", categorys);
+
+          takeLevel.value = [];
+          takeLevel.value = Tool.arrayToTree(categorys, 0);
+          // console.log("树形结构：", takeLevel.value);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    const getCategoryName = (cid: number) => {
+      // console.log(cid)
+      let result = "";
+      categorys.forEach((item: any) => {
+        if (item.id === cid) {
+          // return item.name; // 注意，这里直接return不起作用
+          result = item.name;
+        }
+      });
+      return result;
+    };
 
     //初始加载时触发
     onMounted(() => {
+      handleQueryCategory();
       handleQuery({
         page: 1,
         size: pagination.value.pageSize,
@@ -247,6 +288,7 @@ export default defineComponent({
       loading,
       handleTableChange,
       param,
+      getCategoryName,
 
       edit,
       add,
@@ -257,7 +299,9 @@ export default defineComponent({
       moduleLoading,
       handleModalOk,
       handleDelete,
-      handleQuery
+      handleQuery,
+      takeLevel,
+      categoryIds,
     }
   }
 });
