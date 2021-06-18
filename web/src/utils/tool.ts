@@ -1,3 +1,4 @@
+/* eslint-disable */
 export class Tool {
     /**
      * 空校验 null或""都返回true
