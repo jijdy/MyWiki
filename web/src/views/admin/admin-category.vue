@@ -24,7 +24,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="takeLevel"
           :loading="loading"
           :pagination="false"
       >
@@ -109,9 +109,22 @@ export default defineComponent({
       slots: { customRender: 'action' }
     }
   ];
+
+    /**
+     * 一级分类树，children属性就是二级分类
+     * [{
+     *   id: "",
+     *   name: "",
+     *   children: [{
+     *     id: "",
+     *     name: "",
+     *   }]
+     * }]
+     */
+    const takeLevel = ref();
+
     /*
-    进行#数据查询#,从后端调用数据库信息，一次拿出所有的数据，在前端进行分页
-    通过get传参数到后端，改变参数params中的数据属性,只传递分页需要的属性
+    进行#数据查询#,对分类的页面不需要进行分页功能
     * */
     const handleQuery = () => {
       loading.value = true;
@@ -125,7 +138,11 @@ export default defineComponent({
         const data = response.data;
         if (data.success) {
           categorys.value = data.content;
-
+          //使用工具类使从后端获得的分类变为树型结构
+          console.log(categorys.value);
+          // takeLevel.value = [];
+          takeLevel.value = Tool.arrayToTree(categorys.value,0);
+          console.log(takeLevel.value);
         } else {
           message.error(data.message);``
         }
@@ -189,7 +206,8 @@ export default defineComponent({
 
     return{
 
-      categorys,
+      takeLevel,
+      // categorys,
       columns,
       loading,
       param,
