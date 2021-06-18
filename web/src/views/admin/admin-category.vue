@@ -65,7 +65,17 @@
         <a-input v-model:value="category.name" />
       </a-form-item>
       <a-form-item label="父分类">
-        <a-input v-model:value="category.parent" />
+        <a-select
+            v-model:value="category.parent"
+            ref="select"
+        >
+          <a-select-option value="0">
+            无
+          </a-select-option>
+          <a-select-option v-for="c in takeLevel" :key="c.id" :value="c.id" :disabled="category.id === c.id">
+            {{c.name}}
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="category.sort" />
@@ -139,10 +149,10 @@ export default defineComponent({
         if (data.success) {
           categorys.value = data.content;
           //使用工具类使从后端获得的分类变为树型结构
-          console.log(categorys.value);
-          // takeLevel.value = [];
+          // console.log(categorys.value);
+          takeLevel.value = [];
           takeLevel.value = Tool.arrayToTree(categorys.value,0);
-          console.log(takeLevel.value);
+          // console.log(takeLevel.value);
         } else {
           message.error(data.message);``
         }
