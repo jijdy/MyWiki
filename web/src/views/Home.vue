@@ -3,7 +3,6 @@
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
           mode="inline"
-          v-model:selectedKeys="selectedKeys2"
           v-model:openKeys="openKeys"
           :style="{ height: '100%', borderRight: 0 }"
           @click="handleClick"
@@ -68,9 +67,6 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const ebooks = ref();
-    // const ebooks1 = reactive({bookS: []});
-    // const ebooks1 = reactive({books: []});
-
     const takeLevel =  ref();
     let categorys: any;
     /**
