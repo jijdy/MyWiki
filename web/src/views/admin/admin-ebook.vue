@@ -253,6 +253,10 @@ export default defineComponent({
           takeLevel.value = [];
           takeLevel.value = Tool.arrayToTree(categorys, 0);
           // console.log("树形结构：", takeLevel.value);
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize,
+          });
         } else {
           message.error(data.message);
         }
@@ -274,10 +278,7 @@ export default defineComponent({
     //初始加载时触发
     onMounted(() => {
       handleQueryCategory();
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize,
-      });
+
     });
 
     return{
