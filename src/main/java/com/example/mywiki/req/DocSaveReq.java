@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 public class DocSaveReq {
     private Long id;
 
+    @NotNull(message = "电子书ID不能为空！")
     private Long ebookId;
 
     private Long parent;
