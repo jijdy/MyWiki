@@ -89,10 +89,20 @@ import { defineComponent, onMounted, ref } from "vue";
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 import {Tool} from "@/utils/tool";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name:'AdminDoc',
   setup() {
+    //使用路由类来获取到跳转页面时传入的ebookId参数
+    const route = useRoute();
+    console.log("路由：", route);
+    console.log("route.path：", route.path);
+    console.log("route.query：", route.query.ebookId);
+    console.log("route.param：", route.params);
+    console.log("route.fullPath：", route.fullPath);
+    console.log("route.name：", route.name);
+    console.log("route.meta：", route.meta);
     const param = ref();
     param.value = {};
     const docs = ref();
@@ -242,10 +252,12 @@ export default defineComponent({
       treeSelectData.value.unshift({id:0, name: '无'});
     };
 
-    //新增函数
+    //新增函数,通过路由拿到电子书页面传入的参数
     const add = () => {
       moduleVisible.value = true;
-      doc.value={};
+      doc.value={
+        ebookId: route.query.ebookId,
+      };
 
       treeSelectData.value = Tool.copy(takeLevel.value);
       //添加一个无作为父节点
