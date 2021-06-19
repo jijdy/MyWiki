@@ -2,14 +2,15 @@ package com.example.mywiki.controller;
 
 import com.example.mywiki.req.DocQueryReq;
 import com.example.mywiki.req.DocSaveReq;
-import com.example.mywiki.resp.DocQueryResp;
 import com.example.mywiki.resp.CommonResp;
+import com.example.mywiki.resp.DocQueryResp;
 import com.example.mywiki.service.DocService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController //用于返回字符串
@@ -50,10 +51,11 @@ public class DocController {
         return resp;
     }
      //删除分类的逻辑
-    @DeleteMapping ("/delete/{id}")
-    public CommonResp delete(@PathVariable Long id) {
+    @DeleteMapping ("/delete/{ids}")
+    public CommonResp delete(@PathVariable String ids) {
         CommonResp resp = new CommonResp<>();
-        docService.delete(id);
+        List<String> list = Arrays.asList(ids.split(","));
+        docService.delete(list);
         return resp;
     }
 }

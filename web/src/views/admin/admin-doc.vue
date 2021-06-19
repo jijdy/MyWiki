@@ -96,13 +96,13 @@ export default defineComponent({
   setup() {
     //使用路由类来获取到跳转页面时传入的ebookId参数
     const route = useRoute();
-    console.log("路由：", route);
-    console.log("route.path：", route.path);
-    console.log("route.query：", route.query.ebookId);
-    console.log("route.param：", route.params);
-    console.log("route.fullPath：", route.fullPath);
-    console.log("route.name：", route.name);
-    console.log("route.meta：", route.meta);
+    // console.log("路由：", route);
+    // console.log("route.path：", route.path);
+    // console.log("route.query：", route.query.ebookId);
+    // console.log("route.param：", route.params);
+    // console.log("route.fullPath：", route.fullPath);
+    // console.log("route.name：", route.name);
+    // console.log("route.meta：", route.meta);
     const param = ref();
     param.value = {};
     const docs = ref();
@@ -172,13 +172,14 @@ export default defineComponent({
 
 
     const handleDelete = (id: number) => {
-        axios.delete("/doc/delete/" + id).then((response) => {
-          const data = response.data;
-          if (data.success) {
-            //重新加载数据列表
-            handleQuery();
-          }
-        })
+      getDelete(takeLevel.value, id);
+      axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          //重新加载数据列表
+          handleQuery();
+        }
+      })
     };
 
     //编辑表单
@@ -237,7 +238,35 @@ export default defineComponent({
       }
     };
 
+    const ids : Array<string> = [];
+    //*
+    //查找整根树枝
+    //*/
+    const getDelete =(treeSelectData: any, id: any) => {
+      // console.log(treeSelectData, id);
+      // 遍历数组，即遍历某一层节点
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if (node.id === id) {
+          //将要删除的子节点的id放到ids结果数组中
+          ids.push(id);
 
+          //遍历所有子节点中的id并将其放入到ids中
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let i = 0; i < children.length; i ++) {
+              getDelete(children,children[i].id)
+            }
+          }
+        } else {
+          // 如果当前节点不是目标节点，则到其子节点再找找看。
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            getDelete(children, id);
+          }
+        }
+      }
+    };
 
     //编辑逻辑
     const edit = (record: any) => {

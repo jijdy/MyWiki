@@ -72,8 +72,6 @@ public class DocService {
         Log.info(req.toString());
         Doc doc = CopyUtil.copy(req,Doc.class);
         if(ObjectUtils.isEmpty(req.getId())) {
-            //若id为空，则数据库中无数据，则插入数据
-            //使用了雪花算法，根据时间戳来对更新的id进行计算得到一个long类型的数据
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
         } else {
@@ -84,5 +82,12 @@ public class DocService {
 
     public void delete(long id) {
         docMapper.deleteByPrimaryKey(id);
+    }
+
+    public void delete(List<String> ids) {
+        DocExample docExample = new DocExample();
+        DocExample.Criteria criteria = docExample.createCriteria();
+        criteria.andIdIn(ids);
+        docMapper.deleteByExample(docExample);
     }
 }
