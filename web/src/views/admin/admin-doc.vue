@@ -79,17 +79,22 @@
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort" />
       </a-form-item>
+      <a-form-item label="内容">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
   </a-modal>
 
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, createVNode } from "vue";
 import axios from 'axios';
-import { message } from 'ant-design-vue';
+import { message, Modal } from 'ant-design-vue';
 import {Tool} from "@/utils/tool";
 import {useRoute} from "vue-router";
+import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
+import E from "wangeditor";
 
 export default defineComponent({
   name:'AdminDoc',
@@ -142,6 +147,7 @@ export default defineComponent({
      */
     const takeLevel = ref();
 
+
     /*
     进行#数据查询#,对文档的页面不需要进行分页功能
     将文档的数据转换为树形结构
@@ -174,13 +180,20 @@ export default defineComponent({
 
     const handleDelete = (id: number) => {
       getDelete(takeLevel.value, id);
-      axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
-        const data = response.data;
-        if (data.success) {
-          //重新加载数据列表
-          handleQuery();
-        }
-      })
+      Modal.confirm({
+        title: '重要提醒',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: '将删除：【' + deleteName.join("，") + "】删除后不可恢复，确认删除？",
+        onOk() {
+          axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
+            const data = response.data;
+            if (data.success) {
+              //重新加载数据列表
+              handleQuery();
+            }
+          });
+        },
+      });
     };
 
     //编辑表单
@@ -190,6 +203,10 @@ export default defineComponent({
     const doc = ref({});
     const moduleVisible = ref(false);
     const moduleLoading = ref(false);
+
+    //富文本框初始化
+    const editor = new E("#content");
+
     //ok键按下时触发，也即是提交表单之后的函数
     const handleModalOk = () => {
       moduleLoading.value = true;
@@ -240,12 +257,14 @@ export default defineComponent({
     };
 
     const ids : Array<string> = [];
+    const deleteName : Array<string> = [];
     //*
     //查找整根树枝
     //*/
     const getDelete =(treeSelectData: any, id: any) => {
       // console.log(treeSelectData, id);
-      ids == null ;
+      ids.length == 0 ;
+      deleteName.length == 0;
       // console.log("ids的数值" + ids.toString());
       // 遍历数组，即遍历某一层节点
       for (let i = 0; i < treeSelectData.length; i++) {
@@ -253,6 +272,7 @@ export default defineComponent({
         if (node.id === id) {
           //将要删除的子节点的id放到ids结果数组中
           ids.push(id);
+          deleteName.push(node.name);
 
           //遍历所有子节点中的id并将其放入到ids中
           const children = node.children;
@@ -282,6 +302,9 @@ export default defineComponent({
 
       //添加一个无作为父节点
       treeSelectData.value.unshift({id:0, name: '无'});
+      setTimeout(function () {
+        editor.create();
+      },100);
     };
 
     //新增函数,通过路由拿到电子书页面传入的参数
@@ -294,6 +317,11 @@ export default defineComponent({
       treeSelectData.value = Tool.copy(takeLevel.value);
       //添加一个无作为父节点
       treeSelectData.value.unshift({id:0, name: '无'});
+
+      setTimeout(function () {
+        editor.create();
+      },100);
+
     };
 
 
