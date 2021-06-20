@@ -144,6 +144,7 @@ export default defineComponent({
 
     /*
     进行#数据查询#,对文档的页面不需要进行分页功能
+    将文档的数据转换为树形结构
     * */
     const handleQuery = () => {
       loading.value = true;
@@ -244,6 +245,8 @@ export default defineComponent({
     //*/
     const getDelete =(treeSelectData: any, id: any) => {
       // console.log(treeSelectData, id);
+      ids == null ;
+      // console.log("ids的数值" + ids.toString());
       // 遍历数组，即遍历某一层节点
       for (let i = 0; i < treeSelectData.length; i++) {
         const node = treeSelectData[i];
