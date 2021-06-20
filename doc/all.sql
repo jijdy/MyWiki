@@ -71,3 +71,11 @@ insert into `doc` (id, ebook_id, parent, name, sort, view_count, vote_count) val
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, vote_count) values (4, 1, 3, '文档2.1', 1, 0, 0);
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, vote_count) values (5, 1, 3, '文档2.2', 2, 0, 0);
 insert into `doc` (id, ebook_id, parent, name, sort, view_count, vote_count) values (6, 1, 5, '文档2.2.1', 1, 0, 0);
+
+#文档内容表的设计，id与文档段落保持一致，因为文档为大字段数据，所以为了减小数=数据库查询压力，采用分表设计
+drop table if exists `content`;
+create table `content` (
+    `id` bigint not null comment 'id',
+    `content` mediumtext comment '文档内容',
+    primary key (id)
+) engine=innodb  default charset=utf8mb4 comment '文档内容表';

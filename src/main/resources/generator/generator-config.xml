@@ -44,9 +44,7 @@
         <!--  <table tableName="demo" domainObjectName="Demo"/>-->
         <!-- <table tableName="ebook" domainObjectName="Ebook"/>-->
 <!--        <table tableName="category"/>-->
-        <table tableName="doc"/>
-        <!--<table tableName="content"/>-->
-        <!--<table tableName="user"/>-->
-<!--        <table tableName="ebook_snapshot"/>-->
+<!--        <table tableName="doc"/>-->
+        <table tableName="content"/>
     </context>
 </generatorConfiguration>
