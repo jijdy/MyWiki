@@ -173,7 +173,6 @@ export default defineComponent({
         params: {
           name: param.value.name,
         }
-
       }).then((response) => {
         loading.value = false;
         const data = response.data;
@@ -308,10 +307,23 @@ export default defineComponent({
       }
     };
 
+    //获取到文档内容
+    const handleQueryContent = () => {
+      axios.get("/doc/get-content/" + doc.value.id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          editor.txt.html(data.content);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
     //编辑逻辑
     const edit = (record: any) => {
       moduleVisible.value = true;
       doc.value = Tool.copy(record); //通过一个复制的json对象来使写入的值不会直接映射到页面上
+      handleQueryContent();
 
       //不能选择自己节点的子节点为父节点，会使递归失效
       treeSelectData.value = Tool.copy(takeLevel.value);

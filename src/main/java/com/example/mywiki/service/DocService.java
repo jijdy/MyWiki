@@ -43,12 +43,12 @@ public class DocService {
             DocExample.Criteria criteria = docExample.createCriteria();
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        PageHelper.startPage(req.getPage(),req.getSize());
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<Doc> docList = docMapper.selectByExample(docExample);
 
         PageInfo<Doc> pageInfo = new PageInfo<>(docList);
-        Log.info("总行数：{}",pageInfo.getTotal());
-        Log.info("总页数：{}",pageInfo.getPages());
+        Log.info("总行数：{}", pageInfo.getTotal());
+        Log.info("总页数：{}", pageInfo.getPages());
 
 
         List<DocQueryResp> list = CopyUtil.copyList(docList, DocQueryResp.class);
@@ -74,9 +74,9 @@ public class DocService {
 
     public void save(DocSaveReq req) {
         Log.info(req.toString());
-        Doc doc = CopyUtil.copy(req,Doc.class);
-        Content content = CopyUtil.copy(req,Content.class);
-        if(ObjectUtils.isEmpty(req.getId())) {
+        Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
 
@@ -102,5 +102,13 @@ public class DocService {
         DocExample.Criteria criteria = docExample.createCriteria();
         criteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
+    }
+
+    public String getContent(long id) {
+        Content s = contentMapper.selectByPrimaryKey(id);
+        if (ObjectUtils.isEmpty(s)) {
+            return null;
+        }else
+        return s.getContent();
     }
 }

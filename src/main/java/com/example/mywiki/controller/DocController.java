@@ -5,7 +5,7 @@ import com.example.mywiki.req.DocSaveReq;
 import com.example.mywiki.resp.CommonResp;
 import com.example.mywiki.resp.DocQueryResp;
 import com.example.mywiki.service.DocService;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -18,17 +18,8 @@ import java.util.List;
 @RequestMapping("/doc")
 public class DocController {
 
-    //测试xml配置文件在框架中的使用和值传递。
-    @Value("${doc.value:defaultValue}") //：之后为默认值
-    private String docValue;
-
     @Resource
     private DocService docService;
-
-//    @RequestMapping("/doc")
-//    public String doc() {
-//        return "Hello World!" + docValue;
-//    }
 
     @PostMapping("/post")
     public String PostDoc(String name) {
@@ -56,6 +47,17 @@ public class DocController {
         CommonResp resp = new CommonResp<>();
         List<String> list = Arrays.asList(ids.split(","));
         docService.delete(list);
+        return resp;
+    }
+     //拿出文档的数据
+    @GetMapping  ("/get-content/{id}")
+    public CommonResp get(@PathVariable long id) {
+        CommonResp<String> resp = new CommonResp<>();
+        if (ObjectUtils.isEmpty(id)) {
+            resp.setSuccess(false);
+        }else {
+            resp.setContent(docService.getContent(id));
+        }
         return resp;
     }
 }
