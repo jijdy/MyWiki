@@ -32,6 +32,7 @@
               size="small"
               :defaultExpandAllRows="true"
           >
+<!--            defalut--- 默认展开所有的页面分支，将文档树中的所有分支全部展示出来-->
             <template #name="{ text, record }">
               {{record.sort}} {{text}}}
             </template>
@@ -214,7 +215,8 @@ export default defineComponent({
     //因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
     const treeSelectData = ref();
     // treeSelectDate.value = [];
-    const doc = ref({});
+    const doc = ref();
+    doc.value = {};
     const moduleVisible = ref(false);
     const moduleLoading = ref(false);
 
@@ -225,7 +227,7 @@ export default defineComponent({
     //ok键按下时触发，也即是提交表单之后的函数
     const handleSave = () => {
       moduleLoading.value = true;
-      //使用post新增或修改后端的数据
+      doc.value.content = editor.txt.html();
       axios.post("/doc/save", doc.value).then((response) => {
         moduleLoading.value = false;
         const data = response.data;  //对应的是后端返回给前端的数据commonResp

@@ -16,6 +16,31 @@ public class DocSaveReq {
     @NotNull(message = "排序不能为空！")
     private Integer sort;
 
+    @NotNull(message = "内容不能为空！")
+    private String content;
+
+    @Override
+    public String toString() {
+        return "DocSaveReq{" +
+                "id=" + id +
+                ", ebookId=" + ebookId +
+                ", parent=" + parent +
+                ", name='" + name + '\'' +
+                ", sort=" + sort +
+                ", content='" + content + '\'' +
+                ", viewCount=" + viewCount +
+                ", voteCount=" + voteCount +
+                '}';
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     private Integer viewCount;
 
     private Integer voteCount;
@@ -76,16 +101,4 @@ public class DocSaveReq {
         this.voteCount = voteCount;
     }
 
-    @Override
-    public String toString() {
-        return "DocSaveReq{" +
-                "id=" + id +
-                ", ebookId=" + ebookId +
-                ", parent=" + parent +
-                ", name='" + name + '\'' +
-                ", sort=" + sort +
-                ", viewCount=" + viewCount +
-                ", voteCount=" + voteCount +
-                '}';
-    }
 }

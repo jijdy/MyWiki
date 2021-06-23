@@ -1,7 +1,9 @@
 package com.example.mywiki.service;
 
+import com.example.mywiki.domain.Content;
 import com.example.mywiki.domain.Doc;
 import com.example.mywiki.domain.DocExample;
+import com.example.mywiki.mapper.ContentMapper;
 import com.example.mywiki.mapper.DocMapper;
 import com.example.mywiki.req.DocQueryReq;
 import com.example.mywiki.req.DocSaveReq;
@@ -27,6 +29,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Autowired
     private SnowFlake snowFlake;
@@ -64,19 +69,27 @@ public class DocService {
         docExample.setOrderByClause("sort asc");
         List<Doc> docList = docMapper.selectByExample(docExample);
 
-        List<DocQueryResp> list = CopyUtil.copyList(docList, DocQueryResp.class);
-        return list;
+        return CopyUtil.copyList(docList, DocQueryResp.class);
     }
 
     public void save(DocSaveReq req) {
         Log.info(req.toString());
         Doc doc = CopyUtil.copy(req,Doc.class);
+        Content content = CopyUtil.copy(req,Content.class);
         if(ObjectUtils.isEmpty(req.getId())) {
             doc.setId(snowFlake.nextId());
             docMapper.insert(doc);
+
+            //此时id已经新增，需要获取到值再进行相应操作
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         } else {
             //否则更新数据即可
             docMapper.updateByPrimaryKey(doc);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count == 0) {
+                contentMapper.insert(content);
+            }
         }
     }
 
