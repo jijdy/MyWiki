@@ -32,14 +32,12 @@ public class EbookService {
     private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
-
         EbookExample ebookExample = new EbookExample();
+        EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
-            EbookExample.Criteria criteria = ebookExample.createCriteria();
             criteria.andNameLike("%" + req.getName() + "%");
         }
         if (!ObjectUtils.isEmpty(req.getCategoryId2())) {
-            EbookExample.Criteria criteria = ebookExample.createCriteria();
             criteria.andCategory2IdEqualTo(req.getCategoryId2());
         }
         PageHelper.startPage(req.getPage(),req.getSize());
