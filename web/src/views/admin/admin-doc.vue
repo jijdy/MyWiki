@@ -223,6 +223,7 @@ export default defineComponent({
     const editor = new E("#content");
     editor.config.zIndex = 0;
 
+
     //ok键按下时触发，也即是提交表单之后的函数
     const handleSave = () => {
       moduleLoading.value = true;
@@ -232,8 +233,8 @@ export default defineComponent({
         const data = response.data;  //对应的是后端返回给前端的数据commonResp
 
         if (data.success) {
-          //关闭编辑弹出的页面
-          moduleVisible.value = false;
+          // moduleVisible.value = false;
+          message.success("保存成功！")
 
           //再重新加载已经更新到后端的数据到达前端页面
           handleQuery();
@@ -307,7 +308,7 @@ export default defineComponent({
       }
     };
 
-    //获取到文档内容
+    //从后台获取到文档内容
     const handleQueryContent = () => {
       axios.get("/doc/get-content/" + doc.value.id).then((response) => {
         const data = response.data;
@@ -321,6 +322,7 @@ export default defineComponent({
 
     //编辑逻辑
     const edit = (record: any) => {
+      editor.txt.html("");
       moduleVisible.value = true;
       doc.value = Tool.copy(record); //通过一个复制的json对象来使写入的值不会直接映射到页面上
       handleQueryContent();
@@ -333,8 +335,9 @@ export default defineComponent({
       treeSelectData.value.unshift({id:0, name: '无'});
     };
 
-    //新增函数,通过路由拿到电子书页面传入的参数
+    //新增函数
     const add = () => {
+      editor.txt.html("");
       moduleVisible.value = true;
       doc.value={
         ebookId: route.query.ebookId,
