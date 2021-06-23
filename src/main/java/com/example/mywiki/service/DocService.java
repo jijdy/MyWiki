@@ -1,6 +1,7 @@
 package com.example.mywiki.service;
 
 import com.example.mywiki.domain.Content;
+import com.example.mywiki.domain.ContentExample;
 import com.example.mywiki.domain.Doc;
 import com.example.mywiki.domain.DocExample;
 import com.example.mywiki.mapper.ContentMapper;
@@ -11,6 +12,7 @@ import com.example.mywiki.resp.DocQueryResp;
 import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.util.CopyUtil;
 import com.example.mywiki.util.SnowFlake;
+import com.example.mywiki.util.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -102,6 +104,12 @@ public class DocService {
         DocExample.Criteria criteria = docExample.createCriteria();
         criteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
+
+        List<Long> lids = StringUtil.StrToLong(ids);
+        ContentExample contentExample = new ContentExample();
+        ContentExample.Criteria criteria1 = contentExample.createCriteria();
+        criteria1.andIdIn(lids);
+        contentMapper.deleteByExample(contentExample);
     }
 
     public String getContent(long id) {

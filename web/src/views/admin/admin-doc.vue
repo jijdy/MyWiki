@@ -280,7 +280,7 @@ export default defineComponent({
     //*/
     const getDelete =(treeSelectData: any, id: any) => {
       // console.log(treeSelectData, id);
-      ids.length == 0 ;
+      ids == null ;
       deleteName.length == 0;
       // console.log("ids的数值" + ids.toString());
       // 遍历数组，即遍历某一层节点
