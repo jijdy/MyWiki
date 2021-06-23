@@ -32,7 +32,7 @@
               size="small"
               :defaultExpandAllRows="true"
           >
-<!--            defalut--- 默认展开所有的页面分支，将文档树中的所有分支全部展示出来-->
+<!--            default--- 默认展开所有的页面分支，将文档树中的所有分支全部展示出来-->
             <template #name="{ text, record }">
               {{record.sort}} {{text}}}
             </template>
@@ -169,11 +169,7 @@ export default defineComponent({
     * */
     const handleQuery = () => {
       loading.value = true;
-      axios.get("/doc/all", {
-        params: {
-          name: param.value.name,
-        }
-      }).then((response) => {
+      axios.get("/doc/all/" + route.query.ebookId).then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
@@ -337,6 +333,7 @@ export default defineComponent({
 
     //新增函数
     const add = () => {
+      const treeSelectData = ref();
       editor.txt.html("");
       moduleVisible.value = true;
       doc.value={
