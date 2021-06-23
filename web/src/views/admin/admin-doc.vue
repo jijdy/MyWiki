@@ -87,6 +87,11 @@
               <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
             <a-form-item >
+              <a-button type="primary" @click="handlePreviewContent()">
+                <EyeOutlined /> 内容预览
+              </a-button>
+            </a-form-item>
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
@@ -94,6 +99,9 @@
 
       </a-row>
 
+      <a-drawer width="900" placement="right" :closable="false" :visible="drawerVisible" @close="onDrawerClose">
+        <div class="wangeditor" :innerHTML="previewHtml"></div>
+      </a-drawer>
 
 
     </a-layout-content>
@@ -110,9 +118,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, createVNode } from "vue";
+import {createVNode, defineComponent, onMounted, ref} from "vue";
 import axios from 'axios';
-import { message, Modal } from 'ant-design-vue';
+import {message, Modal} from 'ant-design-vue';
 import {Tool} from "@/utils/tool";
 import {useRoute} from "vue-router";
 import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
@@ -352,6 +360,16 @@ export default defineComponent({
 
     };
 
+    // ----------------富文本预览--------------
+    const drawerVisible = ref(false);
+    const previewHtml = ref();
+    const handlePreviewContent = () => {
+      previewHtml.value = editor.txt.html();
+      drawerVisible.value = true;
+    };
+    const onDrawerClose = () => {
+      drawerVisible.value = false;
+    };
 
     //初始加载时触发
     onMounted(() => {
@@ -381,6 +399,11 @@ export default defineComponent({
       handleQuery,
 
       treeSelectData,
+
+      drawerVisible,
+      previewHtml,
+      handlePreviewContent,
+      onDrawerClose,
     }
   }
 });
