@@ -134,6 +134,8 @@ export default defineComponent({
     param.value = {};
     const docs = ref();
     const loading = ref(false);
+    const treeSelectDate = ref();
+    treeSelectDate.value = [];
 
     const columns = [
     {
@@ -179,6 +181,11 @@ export default defineComponent({
           takeLevel.value = [];
           takeLevel.value = Tool.arrayToTree(docs.value,0);
           // console.log(takeLevel.value);
+
+          // 父文档下拉框初始化，相当于点击新增
+          treeSelectData.value = Tool.copy(takeLevel.value);
+          // 为选择树添加一个"无"
+          treeSelectData.value.unshift({id: 0, name: '无'});
         } else {
           message.error(data.message);``
         }
@@ -333,7 +340,6 @@ export default defineComponent({
 
     //新增函数
     const add = () => {
-      const treeSelectData = ref();
       editor.txt.html("");
       moduleVisible.value = true;
       doc.value={
