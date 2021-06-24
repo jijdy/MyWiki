@@ -227,7 +227,7 @@ export default defineComponent({
     treeSelectDate.value = [];
 
     const doc = ref();
-    doc.value = {};
+    doc.value = {ebookId: route.query.ebookId};
 
     const moduleVisible = ref(false);
     const moduleLoading = ref(false);
