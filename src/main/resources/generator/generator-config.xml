@@ -23,9 +23,9 @@
 
         <!--为插件添加数据库信息及用户命令,连接数据库-->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql:/mywiki?serverTimezone=Asia/Shanghai"
-                        userId="admin"
-                        password="admin">
+                        connectionURL="jdbc:mysql://rm-2zeda75w2at4z2v50go.mysql.rds.aliyuncs.com:3306/mywiki?serverTimezone=Asia/Shanghai"
+                        userId="jijdy"
+                        password="jy@258630">
         </jdbcConnection>
 
         <!-- domain(POJO)类的位置，持久层，数据库映射类 -->
@@ -45,6 +45,6 @@
         <!-- <table tableName="ebook" domainObjectName="Ebook"/>-->
 <!--        <table tableName="category"/>-->
 <!--        <table tableName="doc"/>-->
-        <table tableName="content"/>
+        <table tableName="user"/>
     </context>
 </generatorConfiguration>
