@@ -6,6 +6,7 @@ import com.example.mywiki.resp.CommonResp;
 import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.resp.UserQueryResp;
 import com.example.mywiki.service.UserService;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,8 +28,10 @@ public class UserController {
     }
 
     //sava中导入参数加上@RequestBody注解表示其可以接收来着前端的json数据格式的数据
+    //对密码进行MD5加密
     @PostMapping("/save")
     public CommonResp sava(@Valid @RequestBody UserSaveReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;

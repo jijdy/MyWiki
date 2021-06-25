@@ -14,7 +14,7 @@ public class UserSaveReq {
     private String name;
 
     @NotNull(message = "请设置用户密码！")
-    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$" , message = "【密码】至少包含数字和字母，且长度为6·20")
+    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,32}$" , message = "【密码】至少包含数字和字母，且长度为6·32")
     private String password;
 
     public Long getId() {
