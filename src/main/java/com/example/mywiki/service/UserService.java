@@ -68,8 +68,11 @@ public class UserService {
                 throw  new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
             }
         } else {
-            //否则更新数据即可
-            userMapper.updateByPrimaryKey(user);
+
+            user.setLoginName(null);
+
+            //有选择性的更新数据，不对用户名进行更新
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
