@@ -70,6 +70,7 @@ public class UserService {
         } else {
 
             user.setLoginName(null);
+            user.setPassword(null);
 
             //有选择性的更新数据，不对用户名进行更新
             userMapper.updateByPrimaryKeySelective(user);
