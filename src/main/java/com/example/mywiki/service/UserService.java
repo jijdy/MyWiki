@@ -2,6 +2,8 @@ package com.example.mywiki.service;
 
 import com.example.mywiki.domain.User;
 import com.example.mywiki.domain.UserExample;
+import com.example.mywiki.exception.BusinessException;
+import com.example.mywiki.exception.BusinessExceptionCode;
 import com.example.mywiki.mapper.UserMapper;
 import com.example.mywiki.req.UserQueryReq;
 import com.example.mywiki.req.UserSaveReq;
@@ -56,9 +58,15 @@ public class UserService {
 
     public void save(UserSaveReq req) {
         User user = CopyUtil.copy(req, User.class);
-        if (ObjectUtils.isEmpty(req.getId())) {
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
+        if (ObjectUtils.isEmpty(req.getId())) { //新增用户
+            User user1 = selectByLoginName(req.getLoginName());
+            if (ObjectUtils.isEmpty(user1)) {
+                //新增
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            } else {
+                throw  new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
         } else {
             //否则更新数据即可
             userMapper.updateByPrimaryKey(user);
@@ -67,5 +75,17 @@ public class UserService {
 
     public void delete(Long id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String loginName) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if (userList.isEmpty()) {
+            return null;
+        } else {
+            return userList.get(0);
+        }
     }
 }
