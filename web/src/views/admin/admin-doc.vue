@@ -410,8 +410,7 @@ export default defineComponent({
   }
 });
 
-<img src="../../../../../../../AppData/Local/Temp/5994168_1502781028253_921DFCDC1FAA7527BB554C8F6AE77DD2.png"
-     height="92" width="553"/></script>
+</script>
 <style scoped>
   img {
     width: 50px;
