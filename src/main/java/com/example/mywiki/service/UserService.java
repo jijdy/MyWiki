@@ -6,6 +6,7 @@ import com.example.mywiki.exception.BusinessException;
 import com.example.mywiki.exception.BusinessExceptionCode;
 import com.example.mywiki.mapper.UserMapper;
 import com.example.mywiki.req.UserQueryReq;
+import com.example.mywiki.req.UserResetPasswordReq;
 import com.example.mywiki.req.UserSaveReq;
 import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.resp.UserQueryResp;
@@ -92,4 +93,11 @@ public class UserService {
             return userList.get(0);
         }
     }
+
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        //有选择性的更新数据，不对用户名进行更新
+        userMapper.updateByPrimaryKeySelective(user);
+    }
+
 }
