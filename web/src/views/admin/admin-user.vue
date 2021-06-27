@@ -114,13 +114,13 @@ export default defineComponent({
         dataIndex: 'loginName'
       },
       {
-        title: '名称',
+        title: '昵称',
         dataIndex: 'name'
       },
-      {
-        title: '密码',
-        dataIndex: 'password'
-      },
+      // {
+      //   title: '密码',
+      //   dataIndex: "******"
+      // },
       {
         title: 'Action',
         key: 'action',
