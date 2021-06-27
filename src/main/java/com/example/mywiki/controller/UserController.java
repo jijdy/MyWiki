@@ -1,5 +1,6 @@
 package com.example.mywiki.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.mywiki.req.UserLoginReq;
 import com.example.mywiki.req.UserQueryReq;
 import com.example.mywiki.req.UserResetPasswordReq;
@@ -9,18 +10,31 @@ import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.resp.UserLoginResp;
 import com.example.mywiki.resp.UserQueryResp;
 import com.example.mywiki.service.UserService;
+import com.example.mywiki.util.SnowFlake;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.concurrent.TimeUnit;
 
 @RestController //用于返回字符串
 @RequestMapping("/user")
-public class UserController {
+public class UserController  {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private SnowFlake snowFlake;
+
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/list")
     public CommonResp list(@Valid UserQueryReq req) {
@@ -55,11 +69,20 @@ public class UserController {
         userService.resetPassword(req);
         return resp;
     }
+
     @PostMapping("/login")
     public CommonResp login(@Valid @RequestBody UserLoginReq req) {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp<UserLoginResp> resp = new CommonResp<>();
         UserLoginResp userLoginResp = userService.login(req);
+
+        Long token = snowFlake.nextId();
+        LOGGER.info("生成单点登录token：{}，并放入redis中", token);
+        userLoginResp.setToken(token.toString());
+        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS );
+
+        LOGGER.info("redis中的数据：{}", redisTemplate.opsForValue().get(token));
+
         resp.setContent(userLoginResp);
         return resp;
     }
