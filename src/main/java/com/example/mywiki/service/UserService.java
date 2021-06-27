@@ -5,10 +5,12 @@ import com.example.mywiki.domain.UserExample;
 import com.example.mywiki.exception.BusinessException;
 import com.example.mywiki.exception.BusinessExceptionCode;
 import com.example.mywiki.mapper.UserMapper;
+import com.example.mywiki.req.UserLoginReq;
 import com.example.mywiki.req.UserQueryReq;
 import com.example.mywiki.req.UserResetPasswordReq;
 import com.example.mywiki.req.UserSaveReq;
 import com.example.mywiki.resp.PageResp;
+import com.example.mywiki.resp.UserLoginResp;
 import com.example.mywiki.resp.UserQueryResp;
 import com.example.mywiki.util.CopyUtil;
 import com.example.mywiki.util.SnowFlake;
@@ -100,4 +102,25 @@ public class UserService {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
+    /*
+    * 登录校检操作
+    * */
+    public UserLoginResp login(UserLoginReq req) {
+        User userDb = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(userDb)) {
+            //用户名不存在
+            Log.info("用户名不存在：{}", req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.USER_LOGIN_PASSWORD_IS_WRYING);
+        } else {
+            if (userDb.getPassword().equals(req.getPassword())) {
+                //登录成功
+                return CopyUtil.copy(userDb, UserLoginResp.class);
+            } else {
+                //登录失败
+                Log.info("密码错误：{}", req.getPassword());
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_PASSWORD_IS_WRYING);
+
+            }
+        }
+    }
 }
