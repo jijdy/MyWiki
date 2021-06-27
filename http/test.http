@@ -21,4 +21,14 @@ name=TEST
 
 ###还不能够在参数和=之间加空格，坑
 
-GET http://localhost:8089/test/list
+GET http://localhost:8089/redis/set/123/test
+Accept: application/json
+
+###
+
+POST http://localhost:8089/redis/get/123
+Accept: application/json
+
+###
+DELETE https://localhost:8089/redis/delete/123
+Accept: application/json

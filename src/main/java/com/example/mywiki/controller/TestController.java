@@ -1,36 +1,64 @@
 package com.example.mywiki.controller;
 
-import com.example.mywiki.domain.Test;
-import com.example.mywiki.service.TestService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-@RestController //用于返回字符串
-//@Controller    //用于返回页面,前后端分离中一般用不到
+@RestController
 public class TestController {
 
-    //测试xml配置文件在框架中的使用和值传递。
-    @Value("${test.value:defaultValue}") //：之后为默认值
-    private String testValue;
+    private static final Logger LOG = LoggerFactory.getLogger(TestController.class);
+
+    @Value("${test.hello:TEST}")
+    private String testHello;
 
     @Resource
-    private TestService testService;
+    private RedisTemplate redisTemplate;
 
-    @RequestMapping("/test")
-    public String test() {
-        return "Hello World!" + testValue;
+    /**
+     * GET, POST, PUT, DELETE
+     *
+     * /user?id=1
+     * /user/1
+     * @return
+     */
+    // @PostMapping
+    // @PutMapping
+    // @DeleteMapping
+    // @RequestMapping(value = "/user/1", method = RequestMethod.GET)
+    // @RequestMapping(value = "/user/1", method = RequestMethod.DELETE)
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello World!" + testHello;
     }
 
-    @PostMapping("/test/post")
-    public String PostTest(String name) {
-        return "Hello World!" + name;
+    @PostMapping("/hello/post")
+    public String helloPost(String name) {
+        return "Hello World! Post，" + name;
     }
 
-    @RequestMapping  ("test/list")
-    public List<Test> list() {
-        return testService.list();
+
+    @RequestMapping("/redis/set/{key}/{value}")
+    public String set(@PathVariable Long key, @PathVariable String value) {
+        redisTemplate.opsForValue().set(key, value, 3600, TimeUnit.SECONDS);
+        LOG.info("key: {}, value: {}", key, value);
+        return "success";
+    }
+
+    @RequestMapping("/redis/get/{key}")
+    public Object get(@PathVariable Long key) {
+        Object object = redisTemplate.opsForValue().get(key);
+        LOG.info("key: {}, value: {}", key, object);
+        return object;
+    }
+
+    @DeleteMapping("/redissd/delete/{key}")
+    public Object delete(@PathVariable String key) {
+        return redisTemplate.delete(key);
     }
 }
