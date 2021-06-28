@@ -18,7 +18,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -39,7 +38,7 @@ public class DocService {
     @Resource
     private ContentMapper contentMapper;
 
-    @Autowired
+    @Resource
     private SnowFlake snowFlake;
 
     public PageResp<DocQueryResp> list(DocQueryReq req) {
@@ -130,6 +129,7 @@ public class DocService {
     //获取该文档的内容
     public String getContent(long id) {
         Content s = contentMapper.selectByPrimaryKey(id);
+//        Log.error("文档被访问：{}", id);
         docMapperCust.increaseViewCount(id);//每一次查询文档都将其阅读数 + 1
         if (ObjectUtils.isEmpty(s)) {
             return "";

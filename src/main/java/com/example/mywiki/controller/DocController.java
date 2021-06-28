@@ -1,6 +1,5 @@
 package com.example.mywiki.controller;
 
-import com.example.mywiki.req.DocQueryReq;
 import com.example.mywiki.req.DocSaveReq;
 import com.example.mywiki.resp.CommonResp;
 import com.example.mywiki.resp.DocQueryResp;
@@ -50,7 +49,7 @@ public class DocController {
         return resp;
     }
      //拿出文档的数据
-    @GetMapping  ("/get-content/{id}")
+    @GetMapping  ("/find-content/{id}")
     public CommonResp get(@PathVariable long id) {
         CommonResp<String> resp = new CommonResp<>();
         if (ObjectUtils.isEmpty(id)) {
