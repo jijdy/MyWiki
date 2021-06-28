@@ -59,4 +59,15 @@ public class DocController {
         }
         return resp;
     }
+
+    @GetMapping ("/vote/{id}")
+    public CommonResp gets(@PathVariable Long id) {
+        CommonResp<String> resp = new CommonResp<>();
+        if (ObjectUtils.isEmpty(id)) {
+            resp.setSuccess(false);
+        } else {
+            docService.vote(id);
+        }
+        return resp;
+    }
 }

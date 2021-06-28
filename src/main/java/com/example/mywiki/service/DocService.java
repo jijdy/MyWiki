@@ -136,4 +136,9 @@ public class DocService {
         }else
         return s.getContent();
     }
+
+    //为点赞进行加一操作
+    public void vote(Long id) {
+        docMapperCust.increaseVoteCount(id);
+    }
 }
