@@ -36,7 +36,7 @@ public class UserService {
     private SnowFlake snowFlake;
 
 
-    public PageResp<UserQueryResp> list(UserQueryReq req) {
+    public PageResp<UserQueryResp> list( UserQueryReq req ) {
 
         UserExample userExample = new UserExample();
         if (!ObjectUtils.isEmpty(req.getLoginName())) {
@@ -45,7 +45,6 @@ public class UserService {
         }
         PageHelper.startPage(req.getPage(), req.getSize());
         List<User> userList = userMapper.selectByExample(userExample);
-
         PageInfo<User> pageInfo = new PageInfo<>(userList);
         Log.info("总行数：{}", pageInfo.getTotal());
         Log.info("总页数：{}", pageInfo.getPages());
@@ -59,7 +58,7 @@ public class UserService {
         return pageResp;
     }
 
-    public void save(UserSaveReq req) {
+    public void save( UserSaveReq req ) {
         User user = CopyUtil.copy(req, User.class);
         if (ObjectUtils.isEmpty(req.getId())) { //新增用户
             User user1 = selectByLoginName(req.getLoginName());
@@ -68,7 +67,7 @@ public class UserService {
                 user.setId(snowFlake.nextId());
                 userMapper.insert(user);
             } else {
-                throw  new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
             }
         } else {
 
@@ -80,11 +79,11 @@ public class UserService {
         }
     }
 
-    public void delete(Long id) {
+    public void delete( Long id ) {
         userMapper.deleteByPrimaryKey(id);
     }
 
-    public User selectByLoginName(String loginName) {
+    public User selectByLoginName( String loginName ) {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
         criteria.andLoginNameEqualTo(loginName);
@@ -96,16 +95,16 @@ public class UserService {
         }
     }
 
-    public void resetPassword(UserResetPasswordReq req) {
+    public void resetPassword( UserResetPasswordReq req ) {
         User user = CopyUtil.copy(req, User.class);
         //有选择性的更新数据，不对用户名进行更新
         userMapper.updateByPrimaryKeySelective(user);
     }
 
     /*
-    * 登录校检操作
-    * */
-    public UserLoginResp login(UserLoginReq req) {
+     * 登录校检操作
+     * */
+    public UserLoginResp login( UserLoginReq req ) {
         User userDb = selectByLoginName(req.getLoginName());
         if (ObjectUtils.isEmpty(userDb)) {
             //用户名不存在

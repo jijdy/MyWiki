@@ -18,6 +18,7 @@ MyWikiApplication {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(MyWikiApplication.class);
+//        app.run();
         Environment nev = app.run(args).getEnvironment();
         LOG.info("启动成功！");
         LOG.info("地址：\thttp://127.0.0.1:{}",nev.getProperty("server.port"));
