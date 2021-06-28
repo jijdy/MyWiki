@@ -6,6 +6,7 @@ import com.example.mywiki.domain.Doc;
 import com.example.mywiki.domain.DocExample;
 import com.example.mywiki.mapper.ContentMapper;
 import com.example.mywiki.mapper.DocMapper;
+import com.example.mywiki.mapper.DocMapperCust;
 import com.example.mywiki.req.DocQueryReq;
 import com.example.mywiki.req.DocSaveReq;
 import com.example.mywiki.resp.DocQueryResp;
@@ -31,6 +32,9 @@ public class DocService {
 
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -61,6 +65,7 @@ public class DocService {
         return pageResp;
     }
 
+    //查询所有的文档
     public List<DocQueryResp> all(Long ebookId) {
 
         DocExample docExample = new DocExample();
@@ -75,12 +80,21 @@ public class DocService {
         return CopyUtil.copyList(docList, DocQueryResp.class);
     }
 
+    //保存文档信息
     public void save(DocSaveReq req) {
         Log.info(req.toString());
         Doc doc = CopyUtil.copy(req, Doc.class);
         Content content = CopyUtil.copy(req, Content.class);
         if (ObjectUtils.isEmpty(req.getId())) {
             doc.setId(snowFlake.nextId());
+
+            /*
+            *在初始创建文档表时将其文档阅读数和点赞数置为0，
+            * 因为req传入时没有该参数，默认为null，之后对null不能进行操作
+             */
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
+
             docMapper.insert(doc);
 
             //此时id已经新增，需要获取到值再进行相应操作
@@ -113,8 +127,10 @@ public class DocService {
         contentMapper.deleteByExample(contentExample);
     }
 
+    //获取该文档的内容
     public String getContent(long id) {
         Content s = contentMapper.selectByPrimaryKey(id);
+        docMapperCust.increaseViewCount(id);//每一次查询文档都将其阅读数 + 1
         if (ObjectUtils.isEmpty(s)) {
             return "";
         }else
