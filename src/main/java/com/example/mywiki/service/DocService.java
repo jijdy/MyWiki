@@ -4,6 +4,8 @@ import com.example.mywiki.domain.Content;
 import com.example.mywiki.domain.ContentExample;
 import com.example.mywiki.domain.Doc;
 import com.example.mywiki.domain.DocExample;
+import com.example.mywiki.exception.BusinessException;
+import com.example.mywiki.exception.BusinessExceptionCode;
 import com.example.mywiki.mapper.ContentMapper;
 import com.example.mywiki.mapper.DocMapper;
 import com.example.mywiki.mapper.DocMapperCust;
@@ -11,9 +13,7 @@ import com.example.mywiki.req.DocQueryReq;
 import com.example.mywiki.req.DocSaveReq;
 import com.example.mywiki.resp.DocQueryResp;
 import com.example.mywiki.resp.PageResp;
-import com.example.mywiki.util.CopyUtil;
-import com.example.mywiki.util.SnowFlake;
-import com.example.mywiki.util.StringUtil;
+import com.example.mywiki.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -40,6 +40,9 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    private ReidsRepeatUtil reidsRepeatUtil;
 
     public PageResp<DocQueryResp> list(DocQueryReq req) {
 
@@ -139,6 +142,11 @@ public class DocService {
 
     //为点赞进行加一操作
     public void vote(Long id) {
-        docMapperCust.increaseVoteCount(id);
+        if (reidsRepeatUtil.RedisRepeat("vote_id" + RequestUtil.getRemoteAddr() + "_" + id, 3600 * 24L)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.USER_VOTE_REPEAT);
+        }
+
     }
 }

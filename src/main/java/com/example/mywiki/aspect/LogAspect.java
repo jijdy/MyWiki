@@ -2,6 +2,7 @@ package com.example.mywiki.aspect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.support.spring.PropertyPreFilters;
+import com.example.mywiki.util.RequestUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -48,6 +49,9 @@ public class LogAspect {
         LOG.info("类名方法: {}.{}", signature.getDeclaringTypeName(), name);
         LOG.info("远程地址: {}", request.getRemoteAddr());
 
+        //拿到远程用户ip
+        RequestUtil.setRemoteAddr(getRemoteIp(request));
+
         // 打印请求参数
         Object[] args = joinPoint.getArgs();
         // LOG.info("请求参数: {}", JSONObject.toJSONString(args));
@@ -86,7 +90,7 @@ public class LogAspect {
     /**
      * 使用nginx做反向代理，需要用该方法才能取到真实的远程IP
      * @param request
-     * @return
+     * @return ip地址
      */
     public String getRemoteIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
