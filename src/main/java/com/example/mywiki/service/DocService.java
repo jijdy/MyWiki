@@ -149,4 +149,11 @@ public class DocService {
         }
 
     }
+
+    /*
+     * 统计文档表数据并更新到电子书中
+     * */
+    public void updateEbook() {
+        docMapperCust.updateEbookInfo();
+    }
 }

@@ -7,12 +7,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan("com.example.mywiki")
 @SpringBootApplication
 @MapperScan("com.example.mywiki.mapper")
-public class
-MyWikiApplication {
+@EnableScheduling
+public class MyWikiApplication {
 
     private static final Logger LOG =  LoggerFactory.getLogger(MyWikiApplication.class);
 
