@@ -90,3 +90,17 @@ create table `user` (
     primary key (id),
     unique key `login_name_unique` (`login_name`)
 )engine=innodb default charset=utf8mb4 comment '用户表';
+
+# 生成电子书快照表用于记录和展示电子书前端报表数据
+drop table if exists `ebook_snapshot`;
+create table `ebook_snapshot`(
+                                 `id` bigint auto_increment comment 'id',
+                                 `ebook_id` bigint comment '对应ebook_id',
+                                 `data` date not null comment '快照表生成日期',
+                                 `view_count` int not null default 0 comment '总阅读数',
+                                 `vote_count` int not null default 0 comment '总点赞数',
+                                 `view_increase` int not null default 0 comment '阅读数增长',
+                                 `vote_increase` int not null default 0 comment '点赞数增长',
+                                 primary key (id),
+                                 unique key `ebook_id_unique` (`ebook_id` , `data`)
+) engine=innodb default charset=utf8mb4 comment '电子书快照表';
