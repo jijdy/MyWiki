@@ -14,7 +14,6 @@ import com.example.mywiki.req.DocSaveReq;
 import com.example.mywiki.resp.DocQueryResp;
 import com.example.mywiki.resp.PageResp;
 import com.example.mywiki.util.*;
-import com.example.mywiki.webSocket.WebSocketServer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ public class DocService {
     private ReidsRepeatUtil reidsRepeatUtil;
 
     @Resource
-    private WebSocketServer webSocketServer;
+    private WebSocketService webSocket;
 
     public PageResp<DocQueryResp> list(DocQueryReq req) {
 
@@ -146,7 +145,7 @@ public class DocService {
 
     //为点赞进行加一操作
     public void vote(Long id) {
-        if (reidsRepeatUtil.RedisRepeat("vote_id" + RequestUtil.getRemoteAddr() + "_" + id, 3600 * 24L)) {
+        if (reidsRepeatUtil.RedisRepeat("vote_id" + RequestUtil.getRemoteAddr() + "_" + id, 24L)) {
             docMapperCust.increaseVoteCount(id);
 
         } else {
@@ -154,7 +153,7 @@ public class DocService {
         }
 
         Doc doc = docMapper.selectByPrimaryKey(id);
-        webSocketServer.sendInfo("【" + doc.getName() + "】被点赞！");
+        webSocket.sendInfo("【" + doc.getName() + "】被点赞！");
     }
 
     /*
