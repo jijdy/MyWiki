@@ -96,6 +96,7 @@ export default defineComponent({
           loginModalVisible.value = false;
           message.success("登录成功！");
 
+          // store.state.user = data.message;
           store.commit("setUser",data.content);
 
           // console.log("{}",store.state.user);

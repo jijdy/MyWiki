@@ -57,7 +57,7 @@ public class WebSocketServer {
     }
 
     /*
-    * 群发消息，循环遍历map集合中的连接并检查是否有更新
+    * 群发消息，遍历所有存在的token，对所有在线的用户进行消息推送
     * */
     public void sendInfo(String message) {
         for (String token : map.keySet()) {
