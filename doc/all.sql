@@ -149,3 +149,17 @@ from ebook_snapshot as t1
 where t1.`data` >= date_sub(curdate(), interval 1 day)
 group by (t1.`data`)
 order by (t1.`data`);
+
+# 从电子书快照表中获取到前30天的增长数据
+select
+    t1.`data` as `data`,
+    sum(t1.view_increase) as viewIncrease,
+    sum(t1.vote_increase) as voteIncrease
+from
+    ebook_snapshot t1
+where
+    t1.`data` between date_sub(curdate(), interval 30 day) and date_sub(curdate(), interval 1 day)
+group by
+    t1.`data`
+order by
+    t1.`data` asc;

@@ -43,17 +43,17 @@
 
     <select id="data30dayFind" resultType="com.example.mywiki.resp.EbookSnapshotResp">
         select
-            t1.`date` as `date`,
+            t1.`data` as `data`,
             sum(t1.view_increase) as viewIncrease,
             sum(t1.vote_increase) as voteIncrease
         from
             ebook_snapshot t1
         where
-            t1.`date` between date_sub(curdate(), interval 30 day) and date_sub(curdate(), interval 1 day)
+            t1.`data` between date_sub(curdate(), interval 30 day) and date_sub(curdate(), interval 1 day)
         group by
-            t1.`date`
+            t1.`data`
         order by
-            t1.`date` asc;
+            t1.`data` asc;
     </select>
 
 </mapper>

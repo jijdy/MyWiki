@@ -1,8 +1,12 @@
 package com.example.mywiki.resp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class EbookSnapshotResp {
+
+    @JsonFormat(pattern="MM-dd", timezone = "GMT+8")
     private Date data;
 
     private Integer viewCount;
