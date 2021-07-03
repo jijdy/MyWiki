@@ -10,13 +10,13 @@
       <a-menu-item key="/">
         <router-link to="/">首页</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin/user" :style="user.id? {} : {display:'none'}">
+      <a-menu-item key="/admin/user" :style="user.name? {} : {display:'none'}">
         <router-link to="/admin/user">用户管理</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin" :style="user.id? {} : {display:'none'}">
+      <a-menu-item key="/admin" :style="user.name? {} : {display:'none'}">
         <router-link to="/admin">管理电子书</router-link>
       </a-menu-item>
-      <a-menu-item key="/category" :style="user.id? {} : {display:'none'}">
+      <a-menu-item key="/category" :style="user.name? {} : {display:'none'}">
         <router-link to="/category">分类管理</router-link>
       </a-menu-item>
       <a-menu-item key="3">
