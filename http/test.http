@@ -32,3 +32,7 @@ Accept: application/json
 ###
 DELETE https://localhost:8089/redis/delete/123
 Accept: application/json
+
+###
+GET http://localhost:8089/ebook-snapshot/get-statistic
+

@@ -3,13 +3,42 @@
 <mapper namespace="com.example.mywiki.mapper.EbookSnapshotMapperCust" >
 
     <update id="generatorSnapshot">
+        # 优先生成数据列
         insert into ebook_snapshot(ebook_id, `data`, view_count, vote_count, view_increase, vote_increase)
         select t1.id, curdate(), 0, 0, 0, 0
-        from ebook t1
-        where not exists(select 1
-                         from ebook_snapshot t2
+        from ebook as t1
+        where not exists(select 1 from ebook_snapshot as t2
                          where t1.id = t2.ebook_id
                            and t2.`data` = curdate());
+
+        #再对生成的数据进行更新
+        update ebook_snapshot t1, ebook t2
+        set t1.view_count = t2.view_count,
+            t1.vote_count = t2.vote_count
+        where t1.`data` = curdate()
+          and t1.ebook_id = t2.id;
+
+        # 更新阅读和点赞增长数量，若前一天无数据，则增长数为其本身
+        update ebook_snapshot t1 left join (select ebook_id, view_count, vote_count
+                                            from ebook_snapshot
+                                            where `data` = date_sub(curdate(), interval 1 day)) t2
+            on t1.ebook_id = t2.ebook_id
+        set t1.view_increase = (t1.view_count - ifnull(t2.view_count, 0)),
+            t1.vote_increase = (t1.vote_count - ifnull(t2.vote_count, 0))
+        where t1.`data` = curdate();
     </update>
+
+    <select id="dataFind" resultType="com.example.mywiki.resp.EbookSnapshotResp">
+        # 获取电子书快照表中的数据总数，并进行一定的分析
+        select t1.`data` as `data`,
+               sum(t1.view_count) as viewCount,
+               sum(t1.vote_count) as voteCount,
+               sum(t1.view_increase) as viewIncrease,
+               sum(t1.vote_increase) as voteIncrease
+        from ebook_snapshot as t1
+        where t1.`data` >= date_sub(curdate(), interval 1 day)
+        group by (t1.`data`)
+        order by (t1.`data`);
+    </select>
 
 </mapper>

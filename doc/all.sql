@@ -138,3 +138,14 @@ update ebook_snapshot t1 left join (select ebook_id, view_count, vote_count
 set t1.view_increase = (t1.view_count - ifnull(t2.view_count, 0)),
     t1.vote_increase = (t1.vote_count - ifnull(t2.vote_count, 0))
 where t1.`data` = curdate();
+
+# 获取电子书快照表中的数据总数，并进行一定的分析
+select t1.`data` as `data`,
+       sum(t1.view_count) as viewCount,
+       sum(t1.vote_count) as voteCount,
+       sum(t1.view_increase) as viewIncrease,
+       sum(t1.vote_increase) as voteIncrease
+from ebook_snapshot as t1
+where t1.`data` >= date_sub(curdate(), interval 1 day)
+group by (t1.`data`)
+order by (t1.`data`);
