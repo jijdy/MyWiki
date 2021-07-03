@@ -7,5 +7,8 @@ import java.util.List;
 public interface EbookSnapshotMapperCust {
 
     void generatorSnapshot();
+
     List<EbookSnapshotResp> dataFind();
+
+    List<EbookSnapshotResp> data30dayFind();
 }

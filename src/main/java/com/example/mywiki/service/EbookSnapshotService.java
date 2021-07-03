@@ -21,4 +21,8 @@ public class EbookSnapshotService {
     public List<EbookSnapshotResp> findDate() {
         return ebookSnapshotMapperCust.dataFind();
     }
+
+    public List<EbookSnapshotResp> find30Day() {
+        return ebookSnapshotMapperCust.data30dayFind();
+    }
 }

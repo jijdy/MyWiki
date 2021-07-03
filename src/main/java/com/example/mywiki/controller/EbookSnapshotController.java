@@ -24,4 +24,14 @@ public class EbookSnapshotController {
         commonResp.setContent(list);
         return commonResp;
     }
+
+    @GetMapping("/get-30-statistic")
+    public CommonResp<List<EbookSnapshotResp>> Static30Find() {
+        CommonResp<List<EbookSnapshotResp>> commonResp = new CommonResp<>();
+        List<EbookSnapshotResp> list = ebookSnapshotMapperCust.data30dayFind();
+        commonResp.setContent(list);
+        return commonResp;
+    }
+
+
 }
