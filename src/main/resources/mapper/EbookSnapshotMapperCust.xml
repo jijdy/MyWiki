@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mywiki.mapper.EbookSnapshotMapperCust" >
+
+    <update id="generatorSnapshot">
+        insert into ebook_snapshot(ebook_id, `data`, view_count, vote_count, view_increase, vote_increase)
+        select t1.id, curdate(), 0, 0, 0, 0
+        from ebook t1
+        where not exists(select 1
+                         from ebook_snapshot t2
+                         where t1.id = t2.ebook_id
+                           and t2.`data` = curdate());
+    </update>
+
+</mapper>

@@ -104,3 +104,37 @@ create table `ebook_snapshot`(
                                  primary key (id),
                                  unique key `ebook_id_unique` (`ebook_id` , `data`)
 ) engine=innodb default charset=utf8mb4 comment '电子书快照表';
+
+# 方案一（ID不连续）：
+#   删除今天的数据
+#   为所有的电子书生成一条今天的记录
+#   更新总阅读数、总点赞数
+#   更新今日阅读数、今日点赞数
+# 方案二（ID连续）：
+#   为所有的电子书生成一条今天的记录，如果还没有
+#   更新总阅读数、总点赞数
+#   更新今日阅读数、今日点赞数
+
+# 优先生成数据列
+insert into ebook_snapshot(ebook_id, `data`, view_count, vote_count, view_increase, vote_increase)
+select t1.id, curdate(), 0, 0, 0, 0
+from ebook as t1
+where not exists(select 1 from ebook_snapshot as t2
+    where t1.id = t2.ebook_id
+    and t2.`data` = curdate());
+
+#再对生成的数据进行更新
+update ebook_snapshot t1, ebook t2
+set t1.view_count = t2.view_count,
+    t1.vote_count = t2.vote_count
+where t1.`data` = curdate()
+  and t1.ebook_id = t2.id;
+
+# 更新阅读和点赞增长数量，若前一天无数据，则增长数为其本身
+update ebook_snapshot t1 left join (select ebook_id, view_count, vote_count
+                                    from ebook_snapshot
+                                    where `data` = date_sub(curdate(), interval 1 day)) t2
+    on t1.ebook_id = t2.ebook_id
+set t1.view_increase = (t1.view_count - ifnull(t2.view_count, 0)),
+    t1.vote_increase = (t1.vote_count - ifnull(t2.vote_count, 0))
+where t1.`data` = curdate();
